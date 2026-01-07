@@ -4,7 +4,7 @@ This project implements a custom **Transformer-based architecture** from scratch
 sentiment analysis (positive/negative) on the IMDb Large Movie Review Dataset.
 
 This repository builds the entire training and evaluating pipeline from the ground up, including a custom **Byte Pair
-Encoding (BPE)** tokenizer from **Andrej Karpathy** `minbpe` repository.
+Encoding (BPE)** tokenizer from **Andrej Karpathy's** `minbpe` repository.
 
 ## Project Structure
 
@@ -31,14 +31,14 @@ movie_sentiment_analysis/
 
 ## Installation
 
-1. Clone the repository:
+### 1. Clone the repository:
 
 ```shell
 git clone https://github.com/Spearwish/movie_sentiment_analysis
 cd movie_sentiment_analysis
 ```
 
-2. Install the dependencies:
+### 2. Install the dependencies:
 
 ```shell
 pip install -r requirements.txt
@@ -58,9 +58,7 @@ https://ai.stanford.edu/~amaas/data/sentiment/
 
 ### 2. Extract the dataset
 
-After downloading, extract (unzip) the archive.
-
-After extraction, you should have a folder named:
+After downloading, unzip the archive. You should have a folder named:
 
 ```
 aclImdb_v1/
@@ -118,7 +116,7 @@ These metrics were derived from the 25,000 sample IMDb train set.
 - **Distribution:** The longest review contains **4,567 tokens**, the average is **396**, and the shortest is **11**.
 - **Total Volume:** The dataset comprises nearly **10 million** tokens in total.
 - **The percentile columns** (90th–99th) are critical for choosing the right `SEQ_LEN` hyperparameter in `config.py`. For example, 
-if you set `SEQ_LEN = 1024`, the model's context window will be sufficient for approximately **95 % of all reviews**. 
+if you set `SEQ_LEN = 1024`, the model's context window will be sufficient for approximately **95 % of all train set reviews**. 
 The remaining 5 % will be truncated according to the `TRUNCATE_END` strategy defined in configuration file.
 
 
@@ -141,7 +139,7 @@ python train_bpe_tokenizer.py
 *Configuration:* You can adjust `VOCAB_SIZE` and `TEXT_NORMALIZATION_MODE` in `config.py`.
 
 - `TEXT_NORMALIZATION_MODE = standard` - Minimum required text normalization is applied during tokenizer training.
-- `TEXT_NORMALIZATION_MODE = aggressive` - Standard normalization plus case and accent insensitive normalization is
+- `TEXT_NORMALIZATION_MODE = aggressive` - `standard` normalization plus case and accent insensitive normalization is
   applied during tokenizer training.
 
 ## Train the Model
