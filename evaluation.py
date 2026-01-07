@@ -34,3 +34,5 @@ if run_final_test:
     # run the evaluation on the test data
     test_metrics = evaluate(model, test_loader, get_loss_fn())
     print(test_metrics)
+else:
+    print("Final test set evaluation is disabled.")
