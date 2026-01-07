@@ -1,0 +1,6 @@
+datasets/test/
+datasets/train/
+runs/
+assets/
+weights/
+.idea/
