@@ -3,3 +3,4 @@ tensorboard
 tqdm
 regex
 tiktoken
+playwright

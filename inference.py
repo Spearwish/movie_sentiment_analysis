@@ -4,6 +4,25 @@ import config
 from dataset import normalize_text, normalize_sequence_length
 from minbpe.regex import RegexTokenizer
 from model import TransformerArchitecture
+from scraper import fetch_all_imdb_reviews
+
+
+def inference(x):
+    # normalize the text and encode it into token IDs
+    x = torch.tensor(tokenizer.encode(normalize_text(x, mode=config.TEXT_NORMALIZATION_MODE)), dtype=torch.long)
+
+    # adjust the sequence length to match config.SEQ_LEN (pad or truncate)
+    x = normalize_sequence_length(x)
+
+    # add a batch dimension and move the input to the target device
+    x = x.unsqueeze(0).to(config.DEVICE)
+
+    # run the model to obtain the prediction
+    logit = model(x)
+    prediction = (torch.sigmoid(logit) > 0.5).float()
+
+    return logit, prediction
+
 
 # initialize tokenizer
 tokenizer = RegexTokenizer()
@@ -22,22 +41,35 @@ model = TransformerArchitecture(
 model.load_state_dict(torch.load(f"./weights/{config.run_name}.pt", weights_only=True))
 model.eval()
 
+print("\nRunning inference on positive and negative test sample:")
+
 for x, y in [(pos_test_review, "positive"), (neg_test_review, "negative")]:
     print("\n", x)
 
-    # normalize the text and encode it into token IDs
-    x = torch.tensor(tokenizer.encode(normalize_text(x, mode=config.TEXT_NORMALIZATION_MODE)), dtype=torch.long)
-
-    # adjust the sequence length to match config.SEQ_LEN (pad or truncate)
-    x = normalize_sequence_length(x)
-
-    # add a batch dimension and move the input to the target device
-    x = x.unsqueeze(0).to(config.DEVICE)
-
-    # run the model to obtain the prediction
-    logit = model(x)
-    prediction = (torch.sigmoid(logit) > 0.5).float()
+    # perform model inference on the test input review to obtain logit and prediction
+    logit, prediction = inference(x)
 
     # convert the prediction to a readable format
     label = "positive" if prediction.item() else "negative"
     print(f"- prediction: {label}, logit: {logit.item():.2f}, ground truth: {y}")
+
+print("\nRunning inference on all IMDb Dracula (2025) reviews:\n")
+
+# validation on Dracula (2025) movie - overall IMDb sentiment is mixed (6.2/10) at the time of writing.
+imdb_reviews = fetch_all_imdb_reviews("https://www.imdb.com/title/tt31434030/reviews/")
+
+imdb_movie_sentiment = []
+
+for imdb_review in imdb_reviews:
+    # perform model inference on the imdb input review to obtain logit and prediction
+    logit, prediction = inference(imdb_review)
+
+    # update the IMDb movie sentiment with a scalar value
+    # 1.0 for positive, 0.0 for negative
+    imdb_movie_sentiment.append(prediction.item())
+
+# final sentiment summary
+pos_ratio = sum(imdb_movie_sentiment) / len(imdb_movie_sentiment)
+print("Summary of IMDb Dracula (2025) reviews:")
+print(f"\n{pos_ratio * 100:.2f}% of reviews are positive towards the movie.")
+print(f"{(1 - pos_ratio) * 100:.2f}% of reviews are negative.")

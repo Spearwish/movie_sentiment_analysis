@@ -44,6 +44,13 @@ cd movie_sentiment_analysis
 pip install -r requirements.txt
 ```
 
+### 3. Setup Playwright:
+This project uses **Playwright** for web crawling during the inference stage.
+
+```shell
+playwright install
+```
+
 ## Data Setup
 
 This project uses the **IMDb Large Movie Review Dataset** provided by Stanford.
