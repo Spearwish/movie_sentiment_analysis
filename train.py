@@ -99,6 +99,8 @@ def main():
 
     # initialize validation loss threshold for saving model weights
     best_val_loss = float('inf')
+    best_val_acc = 0.0
+    best_val_f1_macro = 0.0
 
     for epoch in range(config.EPOCHS):
         model.train()  # at the beginning of each epoch ensure that model is in train mode
@@ -150,7 +152,20 @@ def main():
             best_val_loss = val_metrics["loss"]
             torch.save(model.state_dict(), f"./weights/{config.run_name}.pt")
 
+        if val_metrics["accuracy"] > best_val_acc:
+            best_val_acc = val_metrics["accuracy"]
+
+        if val_metrics["f1"]["macro"] > best_val_f1_macro:
+            best_val_f1_macro = val_metrics["f1"]["macro"]
+
         time.sleep(1)  # an ugly fix of tqdm + print collision -> ghost-bars and distorted console log.
+
+    writer.add_hparams(
+        config.hparams,
+        {"hparam/best_val_loss": best_val_loss,
+         "hparam/best_val_acc": best_val_acc,
+         "hparam/best_val_f1_macro": best_val_f1_macro},
+    )
 
     # flush and close the TensorBoard writer after training to ensure all logs are saved
     writer.flush()
