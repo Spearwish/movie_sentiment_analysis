@@ -4,3 +4,7 @@ tqdm
 regex
 tiktoken
 playwright
+pandas
+scikit-learn
+seaborn
+matplotlib
