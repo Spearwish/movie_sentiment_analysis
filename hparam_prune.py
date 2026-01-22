@@ -12,6 +12,9 @@ with open("hparams_table.json", "r") as f:
 # set up pandas DataFrame
 df = pd.DataFrame(data["rows"], columns=data["header"])
 
+# sort the DataFrame entries by best_val_loss, ensure deterministic RF feature importance
+df = df.sort_values(by=["hparam/best_val_loss"]).reset_index(drop=True)
+
 # numeric columns
 hparams_numeric = ["bs", "drop", "emb", "ff", "heads", "layers", "lr", "seq", "truncEnd", "vocab"]
 
