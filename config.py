@@ -4,19 +4,19 @@ import torch
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # model architecture hyperparameters
-VOCAB_SIZE = 4096  # vocabulary size: 256 base UTF-8 tokens + (VOCAB_SIZE - 256) BPE merges
-EMBED_DIM = 32  # dimensionality of the embedding space (C)
+VOCAB_SIZE = 16384  # vocabulary size: 256 base UTF-8 tokens + (VOCAB_SIZE - 256) BPE merges
+EMBED_DIM = 128  # dimensionality of the embedding space (C)
 FF_DIM = 4 * EMBED_DIM  # hidden layer size of the feed forward network
-SEQ_LEN = 768  # maximum sequence length, context window, the model can process
+SEQ_LEN = 1536  # maximum sequence length, context window, the model can process
 N_HEADS = 8  # number of parallel attention heads
-N_LAYER = 6  # number of transformer blocks (depth of the network / backbone)
-DROPOUT = 0.1  # probability of zeroing activations to prevent overfitting
+N_LAYER = 1  # number of transformer blocks (depth of the network / backbone)
+DROPOUT = 0.37  # probability of zeroing activations to prevent overfitting
 TEXT_NORMALIZATION_MODE = "aggressive"  # text preprocessing mode: "standard" vs. "aggressive"
 TRUNCATE_END = False  # strategy for long sequences: True = keep head, False = keep tail
 
 # training hyperparameters
-BATCH_SIZE = 32  # number of training examples processed per iteration
-LR = 3e-4  # step size for weight updates used by optimizer
+BATCH_SIZE = 8  # number of training examples processed per iteration
+LR = 1e-3  # step size for weight updates used by optimizer
 EPOCHS = 25  # total number of complete passes through the training dataset
 PADDING_IDX = 32  # token ID used for sequence padding (mapped to whitespace character)
 
