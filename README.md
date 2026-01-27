@@ -20,8 +20,10 @@ movie_sentiment_analysis/
 ├── config.py                # global hyperparameters and configuration
 ├── dataset.py               # PyTorch dataset class and text normalization logic
 ├── evaluation.py            # script for evaluating the model on the test set
-├── inference.py             # script for running inference on custom text inputs
+├── hparam_prune.py          # script for evaluating hyperparameter importance and correlations
+├── inference.py             # script for running inference on custom or online IMDb reviews
 ├── model.py                 # custom Transformer architecture implementation
+├── scraper.py               # script for fetching all reviews for a particular movie from IMDb
 ├── stats.py                 # dataset and tokenizer statistics analysis
 ├── train.py                 # main training loop with logging and validation
 ├── train_bpe_tokenizer.py   # script for training the BPE tokenizer on the train dataset
@@ -182,7 +184,7 @@ set:
 python evaluation.py
 ```
 
-To make predictions on custom strings run:
+To make real-time predictions on custom strings and online IMDb reviews run:
 
 ```shell
 python inference.py

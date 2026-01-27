@@ -98,7 +98,7 @@ class IMDBDataset(Dataset):
         path = self.file_paths[idx]
         label = self.labels[idx]
 
-        # load the review text - small CPU overhead - could be moved to init along with normalization and tokenization
+        # load the review text - small CPU overhead
         with open(path, 'r', encoding='utf-8') as f:
             review = f.read()
 
