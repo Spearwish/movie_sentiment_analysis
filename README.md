@@ -136,16 +136,32 @@ you can generate fresh statistics by running:
 python stats.py
 ```
 
+## Evaluation & Inference
+
+This repository includes **configuration** discovered via random search, along with the corresponding **model weights** and **tokenizer model**. 
+Set the `run_final_test` variable to `True` inside `evaluation.py` and run the script to get final metrics (86.97% accuracy) 
+on the unseen **IMDb Large Movie Review Dataset**:
+
+```shell
+python evaluation.py
+```
+
+To make real-time predictions on custom strings and online IMDb reviews run:
+
+```shell
+python inference.py
+```
+
 ## Train the Tokenizer
 
-Before training the neural network, you must train the BPE tokenizer on `datasets/train/`. This creates the vocab and
-model files in `assets/`.
+Before training the neural network, you must train the BPE tokenizer for each specific `VOCAB_SIZE` and `TEXT_NORMALIZATION_MODE` configuration 
+on `datasets/train/`. This process generates the vocabulary and model files in `assets/`.
 
 ```shell
 python train_bpe_tokenizer.py
 ```
 
-*Configuration:* You can adjust `VOCAB_SIZE` and `TEXT_NORMALIZATION_MODE` in `config.py`.
+*Note:* You can adjust `VOCAB_SIZE` and `TEXT_NORMALIZATION_MODE` in `config.py`.
 
 - `TEXT_NORMALIZATION_MODE = standard` - Minimum required text normalization is applied during tokenizer training.
 - `TEXT_NORMALIZATION_MODE = aggressive` - `standard` normalization plus case and accent insensitive normalization is
@@ -155,6 +171,9 @@ python train_bpe_tokenizer.py
 
 *Configuration:* You can adjust model hyperparameters in `config.py`. `VOCAB_SIZE` and `TEXT_NORMALIZATION_MODE`
 must match existing tokenizer.
+
+**Important:** Model weights are named according to the hyperparameters defined in `config.py` Launching a training session 
+with existing hyperparameters will overwrite the corresponding weights.
 
 Run the training script to train the Transformer architecture. The script handles:
 
@@ -172,22 +191,6 @@ To view training progress (Loss, Accuracy, F1-Score, ...):
 
 ```shell
 tensorboard --logdir runs
-```
-
-## Evaluation & Inference
-
-Once training is complete, set the `run_final_test` variable to `True` inside `evaluation.py` and
-run the script to get final metrics on the unseen test
-set:
-
-```shell
-python evaluation.py
-```
-
-To make real-time predictions on custom strings and online IMDb reviews run:
-
-```shell
-python inference.py
 ```
 
 ## Documentation
